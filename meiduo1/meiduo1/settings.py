@@ -25,7 +25,7 @@ SECRET_KEY = 'th$y-(rwc)-$6dqp!&-y8)7y%#rfh*+1ty3*$r8qnfqdi9f^9+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.meiduo.site','127.0.0.1']
 
 
 # Application definition
@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.user',
+
+    # 此时使用此种方法在apps模块中需要name='apps.user'
+    # 'apps.user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
