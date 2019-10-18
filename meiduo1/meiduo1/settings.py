@@ -218,3 +218,11 @@ LOGGING = {
         },
     }
 }
+
+#####################重写ModelBackend############################
+AUTHENTICATION_BACKENDS = [
+    'utils.users.UserMobModelBackend'
+]
+
+########################用户中心判断跳转########################
+LOGIN_URL = '/login/'

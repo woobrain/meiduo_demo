@@ -1,9 +1,12 @@
 import re
 
+from django.contrib.auth import logout
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+
+from apps.user.models import User
 from . import models
 # Create your views here.
 from django.urls import reverse
@@ -50,7 +53,7 @@ class Register(View):
         if password != password2:
             return HttpResponseBadRequest('两次密码不一致')
         #  .合法存入数据库
-        RegisterUsersmsCount().get()
+        # RegisterUsersmsCount().get()
         user = models.User.objects.create_user(username=username,
                                         password=password,
                                         mobile=mobile)
@@ -89,13 +92,81 @@ class RegisterUserPhoneCount(View):
         return JsonResponse({"count":count})
 
 
-class RegisterUsersmsCount(View):
+# class RegisterUsersmsCount(View):
+#
+#     def get(self,request):
+#         mobile = request.GET.get('mobile')
+#         mobile = 'sms_%s' % mobile
+#         sms_code = request.GET.get('sms_code')
+#         redis_con = get_redis_connection('code')
+#         mobile1 = redis_con.get(mobile).decode()
+#         if sms_code != mobile1:
+#             return JsonResponse({"error_code":"输入的验证码错误重新输入!"})
+
+
+class LoginView(View):
 
     def get(self,request):
-        mobile = request.GET.get('mobile')
-        mobile = 'sms_%s' % mobile
-        sms_code = request.GET.get('sms_code')
-        redis_con = get_redis_connection('code')
-        mobile1 = redis_con.get(mobile).decode()
-        if sms_code != mobile1:
-            return JsonResponse({"error_code":"输入的验证码错误重新输入!"})
+
+        return render(request,'login.html')
+
+    # 405 Method Not Allowed
+    # 请求方式没有被允许,一般是未写此请求函数
+    def post(self,request):
+        username = request.POST.get('username')
+        password = request.POST.get('pwd')
+        remember = request.POST.get('remembered')
+
+        if not all([username,password]):
+            # return JsonResponse({"code":"4002","errmsg":"参数不全"})
+            return HttpResponseBadRequest("参数不全")
+            # 2.用户名是否为5-20位
+        if not re.match(r'^[a-zA-Z0-9_-]{5,20}$', username):
+            return HttpResponseBadRequest('用户名是否为5-20位')
+        # 3.密码是否为字母加数字加_-
+        if not re.match(r'^[a-zA-Z0-9_-]{8,20}$', password):
+            return HttpResponseBadRequest('请输入8-20位的密码')
+        from django.contrib.auth import login,authenticate
+        from django.contrib.auth.backends import ModelBackend
+        # mobile = re.match(r'^1[3-9]\d{9}$',username).group()
+        # username = User.objects.get(mobile=mobile).username
+        user = authenticate(username=username,password=password)
+        if user is None:
+            return HttpResponseBadRequest("用户名或者密码不匹配")
+
+        login(request,user)
+
+        if remember:
+            request.session.set_expiry(None)
+        else:
+            request.session.set_expiry(0)
+        # request.user = username
+
+        response = redirect(reverse("user1:index"))
+        response.set_cookie('username',user.username,max_age=3600*24)
+        return response
+
+
+class LogoutView(View):
+    def get(self,request):
+        # 清理session
+        logout(request)
+
+        response = render(request, 'index.html')
+        # 清理cookie
+        # response.set_cookie('username',None,max_age=0)
+        response.delete_cookie('username')
+        return response
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+class CenterView(LoginRequiredMixin,View):
+
+    def get(self,request):
+        # if request.user.is_authenticated:
+        #     return render(request,'user_center_info.html')
+        # else:
+        #     return redirect(reverse('user:login'))
+        return render(request,'user_center_info.html')
+
+

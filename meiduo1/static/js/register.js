@@ -143,14 +143,14 @@ var vm = new Vue({
                 this.error_sms_code = true;
             } else {
                 this.error_sms_code = false;
-                let code = this.host + '/code/' + '?sms_code=' + this.sms_code + '&mobile=' + this.mobile;
-                axios.get(code).then(response=>{
-                    this.error_sms_code_message = response.data.error_code;
-                    this.error_sms_code = true;
-                    alert('输入的验证码错误重新输入!')
-                }).catch(error=>{
-                    this.error_sms_code = false;
-                });
+                // let code = this.host + '/code/' + '?sms_code=' + this.sms_code + '&mobile=' + this.mobile;
+                // axios.get(code).then(response=>{
+                //     this.error_sms_code_message = response.data.error_code;
+                //     this.error_sms_code = true;
+                //     alert('输入的验证码错误重新输入!')
+                // }).catch(error=>{
+                //     this.error_sms_code = false;
+                // });
             }
         },
         // 检查是否勾选协议
@@ -206,7 +206,7 @@ var vm = new Vue({
                         if (response.data.code == '4001') {
                             this.error_image_code_message = response.data.errmsg;
                             this.error_image_code = true;
-                        } else { // 4002
+                        } else if(response.data.code == '1'){ // 4002
                             this.error_sms_code_message = response.data.errmsg;
                             this.error_sms_code = true;
                         }
