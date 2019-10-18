@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # url(r'^t1/', t1),
     # url(r'^t2/', t2),
-    url(r'', include('apps.user.urls'))
-
+    url(r'', include('apps.user.urls',namespace='user')),
+    url(r'', include('apps.user1.urls',namespace='user1')),
+    url(r'', include('apps.verifications.urls',namespace='verify'))
 ]

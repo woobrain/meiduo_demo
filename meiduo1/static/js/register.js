@@ -54,6 +54,8 @@ var vm = new Vue({
             this.image_code_id = this.generateUUID();
             // 设置页面中图片验证码img标签的src属性
             this.image_code_url = this.host + "/image_codes/" + this.image_code_id + "/";
+
+
             console.log(this.image_code_url);
         },
         // 检查用户名
@@ -61,6 +63,23 @@ var vm = new Vue({
             var re = /^[a-zA-Z0-9_-]{5,20}$/;
             if (re.test(this.username)) {
                 this.error_name = false;
+                // let url = 'www.meiduo.site:8000/username/itcast/';
+                let url = 'http://www.meiduo.site:8000/usernames/'+this.username+'/';
+                axios.get(url)
+                    .then(response => {
+                        console.log(response);
+                        if(response.data.count == 1) {
+                            this.error_name_message = '用户名有大哥已经注册了'
+                            this.error_name = true
+                        }else {
+                            this.error_name = false
+                        }
+                })
+                    .catch(error =>{
+                        alert(error);
+
+                    });
+
             } else {
                 this.error_name_message = '请输入5-20个字符的用户名';
                 this.error_name = true;
@@ -80,6 +99,7 @@ var vm = new Vue({
         // 确认密码
         check_password2: function () {
             if (this.password != this.password2) {
+
                 this.error_check_password = true;
             } else {
                 this.error_check_password = false;
@@ -89,10 +109,20 @@ var vm = new Vue({
         check_mobile: function () {
             var re = /^1[345789]\d{9}$/;
             if (re.test(this.mobile)) {
-                this.error_phone = false;
+                this.error_mobile = false;
+                let url = 'http://www.meiduo.site:8000/mobile/' + this.mobile + '/';
+                axios.get(url).then(response=>{
+                    if(response.data.count == 1){
+                        this.error_mobile_message='手机号已经注册';
+                        this.error_mobile=true;
+                    }
+                }).catch(error=>{
+                    this.error_mobile=false;
+                });
+
             } else {
                 this.error_mobile_message = '您输入的手机号格式不正确';
-                this.error_phone = true;
+                this.error_mobile = true;
             }
 
         },
@@ -113,6 +143,14 @@ var vm = new Vue({
                 this.error_sms_code = true;
             } else {
                 this.error_sms_code = false;
+                let code = this.host + '/code/' + '?sms_code=' + this.sms_code + '&mobile=' + this.mobile;
+                axios.get(code).then(response=>{
+                    this.error_sms_code_message = response.data.error_code;
+                    this.error_sms_code = true;
+                    alert('输入的验证码错误重新输入!')
+                }).catch(error=>{
+                    this.error_sms_code = false;
+                });
             }
         },
         // 检查是否勾选协议
@@ -134,13 +172,13 @@ var vm = new Vue({
             this.check_mobile();
             this.check_image_code();
 
-            if (this.error_phone == true || this.error_image_code == true) {
+            if (this.error_mobile == true || this.error_image_code == true) {
                 this.sending_flag = false;
                 return;
             }
 
             // 向后端接口发送请求，让后端发送短信验证码
-            var url = this.host + '/sms_codes/' + this.mobile + '/?image_code=' + this.image_code + '&image_code_id=' + this.image_code_id;
+            var url = this.host + '/sms_codes/' + this.mobile + '/?image_code=' + this.image_code + '&uuid=' + this.image_code_id;
             axios.get(url, {
                 responseType: 'json'
             })
@@ -187,11 +225,11 @@ var vm = new Vue({
             this.check_password();
             this.check_password2();
             this.check_mobile();
-            // this.check_sms_code();
+            this.check_sms_code();
             this.check_allow();
 
             if (this.error_name == true || this.error_password == true || this.error_check_password == true
-                || this.error_phone == true || this.error_sms_code == true || this.error_allow == true) {
+                || this.error_mobile == true || this.error_sms_code == true || this.error_allow == true) {
                 // 不满足注册条件：禁用表单
                 window.event.returnValue = false;
             }
