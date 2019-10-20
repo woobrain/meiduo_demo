@@ -662,7 +662,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571582921063</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="qq登录实现用户绑定后的操作">
+      <created>1571582943929</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1571582943929</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -744,7 +751,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="qq登录初级" />
-    <option name="LAST_COMMIT_MESSAGE" value="qq登录初级" />
+    <MESSAGE value="qq登录实现用户绑定后的操作" />
+    <option name="LAST_COMMIT_MESSAGE" value="qq登录实现用户绑定后的操作" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
