@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.user',
     'apps.user1',
+    'apps.oauth',
 
     # 此时使用此种方法在apps模块中需要name='apps.user'
     # 'apps.user.apps.UserConfig'

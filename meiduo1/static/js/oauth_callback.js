@@ -50,6 +50,7 @@ let vm = new Vue({
 			if (re.test(this.password)) {
 				this.error_password = false;
 			} else {
+				this.error_password_message='您输入密码格式不正确'
 				this.error_password = true;
 			}
 		},
@@ -88,7 +89,7 @@ let vm = new Vue({
 			}
 
 			// 向后端接口发送请求，让后端发送短信验证码
-			let url = '/sms_codes/' + this.mobile + '/?image_code=' + this.image_code+'&image_code_id='+ this.uuid;
+			let url = '/sms_codes/' + this.mobile + '/?image_code=' + this.image_code+'&uuid='+ this.uuid;
 			axios.get(url, {
 				responseType: 'json'
 			})
