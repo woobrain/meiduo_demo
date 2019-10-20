@@ -42,30 +42,42 @@ class QLoginView(View):
             return render(request, 'oauth_callback.html', context={'openid': openid})
         else:
             login(request,qquser.user)
-            response = redirect(reverse('contents:index'))
+            response = redirect(reverse('user1:index'))
             #设置cookie
             response.set_cookie('username',qquser.user.username,max_age=24*3600)
             return response
 
 
-def post(self,request):
+    def post(self,request):
 
-    openid = request.POST.get('openid')
-    mobile = request.POST.get('mobile')
-    pwd = request.POST.get('pwd')
-    sms_code = request.POST.get('sms_code')
+        openid = request.POST.get('openid')
+        mobile = request.POST.get('mobile')
+        pwd = request.POST.get('pwd')
+        sms_code = request.POST.get('sms_code')
 
-    # 初步校验参数
+        # 初步校验参数
 
-    # 在数据库中比对
-    # from django_redis import get_redis_connection
+        # 在数据库中比对
+        # from django_redis import get_redis_connection
+
+        try:
+            user = User.objects.get(mobile=mobile)
+        except User.DoesNotExist:
+            user = User.objects.create_user(username=mobile,password=pwd,mobile=mobile)
+        else:
+            if not user.check_password(pwd):
+                return HttpResponseBadRequest('密码错误')
+
+        OAuthQQUser.objects.create(user_id=user.id, openid=openid)
+
+        # OAuthQQUser.objects.update(openid=openid,user_id=user.id)
+        login(request, user)
+
+        response = redirect(reverse('user1:index'))
+
+        response.set_cookie('username', user.username, max_age=24 * 3600)
+
+        return response
 
 
-    user = User.objects.get(mobile=mobile)
-    if not user:
-        User.objects.create_user(username=mobile,password=pwd,mobile=mobile)
-        return render(request,'')
-
-
-
-    return redirect(reverse('user:index1'))
+        # return redirect(reverse('user:index1'))
