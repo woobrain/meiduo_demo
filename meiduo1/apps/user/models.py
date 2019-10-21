@@ -12,6 +12,8 @@ from django.db import models
 class User(AbstractUser):
     mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
     email_active = models.BooleanField(default=False,verbose_name='邮箱')
+    default_address = models.ForeignKey('myaddr.Address', related_name='users', null=True, blank=True,
+                                        on_delete=models.SET_NULL, verbose_name='默认地址')
 
     class Meta:
         db_table = 'tb_users'

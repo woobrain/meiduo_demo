@@ -39,4 +39,5 @@ urlpatterns = [
     url(r'', include('apps.user1.urls',namespace='user1')),
     url(r'', include('apps.verifications.urls',namespace='verify')),
     url(r'', include('apps.oauth.urls',namespace='oauth')),
+    url(r'', include('apps.areas.urls',namespace='areas')),
 ]

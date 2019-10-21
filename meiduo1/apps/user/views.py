@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from apps.user.models import User
+from apps.user.utils import check_active_email_url
+from celery_tasks.email.tasks import send_active_email
 from . import models
 # Create your views here.
 from django.urls import reverse
@@ -176,6 +178,9 @@ class CenterView(LoginRequiredMixin,View):
         }
         return render(request,'user_center_info.html',context=context)
 
+class SiteView(View):
+    def get(self,request):
+        return render(request,'user_center_site.html')
 
 class EmailView(LoginRequiredMixin,View):
 
@@ -197,21 +202,52 @@ class EmailView(LoginRequiredMixin,View):
         #               connection=None, html_message=None):
         # subject, message, from_email, recipient_list,
         # subject        主题
-        subject = '美多商场激活邮件'
-        # message,       内容
-        message = ''
-        # from_email,  谁发的
-        from_email = '欢乐玩家<15893775982@163.com>'
-        # recipient_list,  收件人列表
-        recipient_list = ['15893775982@163.com']
-
-        html_mesage = "<a href='http://www.huyouni.com'>戳我有惊喜</a>"
-
-        send_mail(subject=subject,
-                  message=message,
-                  from_email=from_email,
-                  recipient_list=recipient_list,
-                  html_message=html_mesage)
-
+        # subject = '美多商场激活邮件'
+        # # message,       内容
+        # message = ''
+        # # from_email,  谁发的
+        # from_email = '欢乐玩家<15893775982@163.com>'
+        # # recipient_list,  收件人列表
+        # recipient_list = ['15893775982@163.com']
+        #
+        # html_mesage = "<a href='http://www.meiduo.site:8000/emailsactive/?token_id=1'>戳我有惊喜</a>"
+        #
+        # send_mail(subject=subject,
+        #           message=message,
+        #           from_email=from_email,
+        #           recipient_list=recipient_list,
+        #           html_message=html_mesage)
+        send_active_email.delay(request.user.id, email)
         # ⑤ 返回相应
         return JsonResponse({'code': 0, 'errmsg': 'ok'})
+
+
+class Emailactive(View):
+
+    def get(self,request):
+        token_id = request.GET.get('token')
+        if token_id is None:
+            return HttpResponseBadRequest('激活失败')
+        data = check_active_email_url(token_id)
+        if data is None:
+            return HttpResponseBadRequest('验证失败')
+        id = data.get('id')
+        email = data.get('email')
+
+        try:
+            user = User.objects.get(id=id,email=email)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest('验证失败')
+        user.email_active=True
+        user.save()
+        return redirect(reverse("user:center"))
+        # return HttpResponse('激活成功')
+
+
+class AddView(LoginRequiredMixin,View):
+    def post(self,request):
+        pass
+
+
+
+

@@ -22,7 +22,7 @@ class ImageView(View):
 
 class CodeView(View):
 
-    def get(self, request, mobile):
+    def get(self, request,mobile):
         # 1.接受参数
         image_code = request.GET.get('image_code')
         uuid = request.GET.get('uuid')
