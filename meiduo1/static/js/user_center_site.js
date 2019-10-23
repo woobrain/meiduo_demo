@@ -29,15 +29,17 @@ var vm = new Vue({
         default_address_id: '',
         edit_title_index: '',
         input_title: '',
-        add_title:'新  增'
+        add_title:'新  增',
+    //     addresses: JSON.parse(JSON.stringify(addresses)),
+    // default_address_id: default_address_id,
     },
     mounted(){
         // 获取省份数据
         this.get_provinces();
         // 将用户地址列表绑定到变量, addresses 是django模板传给vue的json字符串
-        // this.addresses = JSON.parse(JSON.stringify(addresses));
+        this.addresses = JSON.parse(JSON.stringify(addresses));
         // 默认地址id
-        // this.default_address_id = default_address_id;
+        this.default_address_id = default_address_id;
     },
     watch: {
         // 监听到省份id变化
@@ -210,6 +212,7 @@ var vm = new Vue({
                                 // location.reload();
                                 // 局部刷新界面：展示所有地址信息，将新的地址添加到头部
                                 this.addresses.splice(0, 0, response.data.address);
+                                console.log(this.addresses);
                                 this.is_show_edit = false;
                             } else if (response.data.code == '4101') {
                                 location.href = '/login/?next=/addresses/';
@@ -282,31 +285,38 @@ var vm = new Vue({
         },
         // 设置默认地址
         set_default(index){
-            var url = this.host + '/addresses/' + this.addresses[index].id + '/default/';
-            axios.put(url, {}, {
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                responseType: 'json'
-            })
-                .then(response => {
-                    if (response.data.code == '0') {
-                        // 设置默认地址标签
-                        this.default_address_id = this.addresses[index].id;
-                    } else if (response.data.code == '4101') {
-                        location.href = '/login/?next=/addresses/';
-                    } else {
-                        alert(response.data.errmsg);
-                    }
-                })
-                .catch(error => {
-                    console.log(error.response);
-                })
+    let url = '/addresses/' + this.addresses[index].id + '/default/';
+    axios.put(url, {}, {
+        headers: {
+            'X-CSRFToken':getCookie('csrftoken')
         },
+        responseType: 'json'
+    })
+        .then(response => {
+            if (response.data.code == '0') {
+                // 设置默认地址标签
+                this.default_address_id = this.addresses[index].id;
+            } else if (response.data.code == '4101') {
+                location.href = '/login/?next=/addresses/';
+            } else {
+                alert(response.data.errmsg);
+            }
+        })
+        .catch(error => {
+            console.log(error.response);
+        })
+},
         // 设置地址title
+     show_edit_site(index){
+    this.is_show_edit = true;
+    this.clear_all_errors();
+    this.editing_address_index = index.toString();
+    // 只获取要编辑的数据
+    this.form_address = JSON.parse(JSON.stringify(this.addresses[index]));
+},
         show_edit_title(index){
-            this.edit_title_index = index;
-        },
+    this.edit_title_index = index;
+},
         // 取消保存地址title
         cancel_title(){
             this.edit_title_index = '';
@@ -314,33 +324,32 @@ var vm = new Vue({
         },
         // 保存地址title
         save_title(index){
-            if (!this.input_title) {
-                alert("请填写标题后再保存！");
-            } else {
-                var url = this.host + '/addresses/' + this.addresses[index].id + '/title/';
-                axios.put(url, {
-                    title: this.input_title
-                }, {
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    responseType: 'json'
-                })
-                    .then(response => {
-                        if (response.data.code == '0') {
-                            // 更新地址title
-                            this.addresses[index].title = this.input_title;
-                            this.cancel_title();
-                        } else if (response.data.code == '4101') {
-                            location.href = '/login/?next=/addresses/';
-                        } else {
-                            alert(response.data.errmsg);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error.response);
-                    })
-            }
-        },
+    if (!this.input_title) {
+        alert("请填写标题后再保存！");
+    } else {
+        let url = '/addresses/' + this.addresses[index].id + '/title/';
+        axios.put(url, {
+            title: this.input_title
+        }, {
+            headers: {
+                'X-CSRFToken':getCookie('csrftoken')
+            },
+            responseType: 'json'
+        })
+            .then(response => {
+                if (response.data.code == '0') {
+                    // 更新地址title
+                    this.addresses[index].title = this.input_title;
+                    this.cancel_title();
+                } else if (response.data.code == '4101') {
+                    location.href = '/login/?next=/addresses/';
+                } else {
+                    alert(response.data.errmsg);
+                }
+            })
+            .catch(error => {
+                console.log(error.response);
+            })
+    }},
     }
 });
