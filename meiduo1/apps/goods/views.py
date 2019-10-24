@@ -1,4 +1,7 @@
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -164,3 +167,43 @@ class DetailVisitView(View):
             cg.count +=1
             cg.save()
             return JsonResponse({'code': RETCODE.OK, 'errmsg': 'ok'})
+
+
+class BrowserAddView(LoginRequiredMixin,View):
+    def get(self,request):
+        user_id = request.user.id
+        from django_redis import get_redis_connection
+        redis_con = get_redis_connection('history')
+
+        sku_ids = redis_con.lrange('his_%s' % user_id, 0, -1)
+
+        sku_list = []
+        for sku_id in sku_ids:
+            sku = SKU.objects.get(id=sku_id)
+            sku_list.append({
+                "id":sku.id,
+                "name":sku.name,
+                "price":sku.price,
+                "default_image_url":sku.default_image.url
+            })
+        return JsonResponse({"code":0,"errmsg":"ok","skus":sku_list})
+
+
+    def post(self,request):
+        data = json.loads(request.body.decode())
+        sku_id = data.get('sku_id')
+        from django_redis import get_redis_connection
+        redis_con = get_redis_connection('history')
+        # # 创建Redis管道
+        pl = redis_con.pipeline()
+        user_id = request.user.id
+        # pipeline的使用,去重操作lrem
+        pl.lrem('his_%s' % user_id, 0, sku_id)
+        # pipeline的使用,去重操作lpush保存
+        pl.lpush('his_%s' % user_id,sku_id)
+        # pipeline的使用,去重操作ltrim保存
+        pl.ltrim('his_%s' % user_id,0,4)
+        # # 执行请求
+        pl.execute()
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
+

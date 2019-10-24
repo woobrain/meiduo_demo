@@ -464,3 +464,5 @@ class UpdateTitleAddressView(LoginRequiredMixin, View):
 
         # 4.响应删除地址结果
         return JsonResponse({'code': 0, 'errmsg': '设置地址标题成功'})
+
+
