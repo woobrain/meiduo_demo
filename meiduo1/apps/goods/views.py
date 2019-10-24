@@ -1,4 +1,5 @@
 from django.http import HttpResponseBadRequest
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.core.paginator import Paginator
 # Create your views here.
@@ -64,3 +65,23 @@ class ListView(View):
         return render(request, 'list.html', context)
 
 
+class HotView(View):
+    def get(self,request,category_id):
+        try:
+            category = GoodsCategory.objects.get(id=category_id)
+        except GoodsCategory.DoesNotExist:
+            return JsonResponse({"code":5555,"errmsg":"ok"})
+        hots = SKU.objects.filter(category=category,is_launched=True).order_by('-sales')[:2]
+
+        hot_list=[]
+        for sku in hots:
+            hot_list.append({
+                'id':sku.id,
+                'default_image_url':sku.default_image.url,
+                'name':sku.name,
+                'price':sku.price
+
+            })
+        a=hot_list
+
+        return JsonResponse({"code":0,"errmsg":"ok","hot_skus":hot_list})

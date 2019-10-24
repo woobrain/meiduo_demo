@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f14298bc-038f-4ab1-a4bb-5129b892d8d6" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/user1/utils.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/goods/urls.py" afterPath="$PROJECT_DIR$/apps/goods/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/goods/views.py" afterPath="$PROJECT_DIR$/apps/goods/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/user1/views.py" afterPath="$PROJECT_DIR$/apps/user1/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/list.html" afterPath="$PROJECT_DIR$/templates/list.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/user_center_info.html" afterPath="$PROJECT_DIR$/templates/user_center_info.html" />
     </list>
@@ -43,22 +41,10 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/goods/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="30" column="38" lean-forward="false" selection-start-line="30" selection-start-column="38" selection-end-line="30" selection-end-column="38" />
+            <state relative-caret-position="352">
+              <caret line="79" column="50" lean-forward="true" selection-start-line="79" selection-start-column="50" selection-end-line="79" selection-end-column="50" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/user1/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="28" column="9" lean-forward="true" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -97,21 +83,21 @@
       <file leaf-file-name="list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="458">
-              <caret line="270" column="6" lean-forward="true" selection-start-line="270" selection-start-column="6" selection-end-line="270" selection-end-column="6" />
+            <state relative-caret-position="408">
+              <caret line="50" column="45" lean-forward="true" selection-start-line="50" selection-start-column="45" selection-end-line="50" selection-end-column="45" />
               <folding>
-                <element signature="e#3215#3219#0#HTML" expanded="true" />
-                <element signature="e#3489#3493#0#HTML" expanded="true" />
-                <element signature="e#4082#4086#0#HTML" expanded="true" />
-                <element signature="e#4658#4662#0#HTML" expanded="true" />
-                <element signature="e#5234#5238#0#HTML" expanded="true" />
-                <element signature="e#5591#5595#0#HTML" expanded="true" />
-                <element signature="e#5930#5934#0#HTML" expanded="true" />
-                <element signature="e#6273#6277#0#HTML" expanded="true" />
-                <element signature="e#6600#6604#0#HTML" expanded="true" />
-                <element signature="e#6959#6963#0#HTML" expanded="true" />
-                <element signature="e#7299#7303#0#HTML" expanded="true" />
-                <element signature="e#7656#7660#0#HTML" expanded="true" />
+                <element signature="e#3221#3225#0#HTML" expanded="true" />
+                <element signature="e#3495#3499#0#HTML" expanded="true" />
+                <element signature="e#4088#4092#0#HTML" expanded="true" />
+                <element signature="e#4664#4668#0#HTML" expanded="true" />
+                <element signature="e#5240#5244#0#HTML" expanded="true" />
+                <element signature="e#5597#5601#0#HTML" expanded="true" />
+                <element signature="e#5936#5940#0#HTML" expanded="true" />
+                <element signature="e#6279#6283#0#HTML" expanded="true" />
+                <element signature="e#6606#6610#0#HTML" expanded="true" />
+                <element signature="e#6965#6969#0#HTML" expanded="true" />
+                <element signature="e#7305#7309#0#HTML" expanded="true" />
+                <element signature="e#7662#7666#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -120,9 +106,21 @@
       <file leaf-file-name="list.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/js/list.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="208">
+              <caret line="49" column="54" lean-forward="false" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="54" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/goods/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="72">
+              <caret line="3" column="96" lean-forward="false" selection-start-line="3" selection-start-column="96" selection-end-line="3" selection-end-column="96" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -147,6 +145,7 @@
       <find>r_wrap</find>
       <find>bread</find>
       <find>手机通讯</find>
+      <find>new</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -202,11 +201,11 @@
         <option value="$PROJECT_DIR$/meiduo1/settings.py" />
         <option value="$PROJECT_DIR$/templates/index.html" />
         <option value="$PROJECT_DIR$/templates/404.html" />
-        <option value="$PROJECT_DIR$/apps/goods/urls.py" />
         <option value="$PROJECT_DIR$/apps/user1/utils.py" />
-        <option value="$PROJECT_DIR$/templates/list.html" />
         <option value="$PROJECT_DIR$/apps/user1/views.py" />
+        <option value="$PROJECT_DIR$/apps/goods/urls.py" />
         <option value="$PROJECT_DIR$/apps/goods/views.py" />
+        <option value="$PROJECT_DIR$/templates/list.html" />
       </list>
     </option>
   </component>
@@ -314,7 +313,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="user" />
+              <option name="myItemId" value="goods" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -801,7 +800,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571909466881</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="面包屑与排序">
+      <created>1571919377872</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1571919377872</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TodoView">
@@ -889,7 +895,8 @@
     <MESSAGE value="商品表数据准备" />
     <MESSAGE value=" 增删改查地址" />
     <MESSAGE value="首页请求storage获取静态资源,以及商品列表界面的分页实现" />
-    <option name="LAST_COMMIT_MESSAGE" value="首页请求storage获取静态资源,以及商品列表界面的分页实现" />
+    <MESSAGE value="面包屑与排序" />
+    <option name="LAST_COMMIT_MESSAGE" value="面包屑与排序" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -939,6 +946,11 @@
           <line>26</line>
           <option name="timeStamp" value="47" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/apps/goods/views.py</url>
+          <line>86</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
@@ -950,7 +962,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="70" />
+      <option name="time" value="71" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1286,16 +1298,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/goods/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="3" column="93" lean-forward="false" selection-start-line="3" selection-start-column="93" selection-end-line="3" selection-end-column="93" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/meiduo1/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="472">
@@ -1324,16 +1326,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/user1/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="28" column="9" lean-forward="true" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4166">
@@ -1352,39 +1344,59 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/apps/user1/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="424">
+          <caret line="28" column="9" lean-forward="true" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/static/js/list.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="208">
+          <caret line="49" column="54" lean-forward="false" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="54" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/goods/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="3" column="96" lean-forward="false" selection-start-line="3" selection-start-column="96" selection-end-line="3" selection-end-column="96" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="270" column="6" lean-forward="true" selection-start-line="270" selection-start-column="6" selection-end-line="270" selection-end-column="6" />
+        <state relative-caret-position="408">
+          <caret line="50" column="45" lean-forward="true" selection-start-line="50" selection-start-column="45" selection-end-line="50" selection-end-column="45" />
           <folding>
-            <element signature="e#3215#3219#0#HTML" expanded="true" />
-            <element signature="e#3489#3493#0#HTML" expanded="true" />
-            <element signature="e#4082#4086#0#HTML" expanded="true" />
-            <element signature="e#4658#4662#0#HTML" expanded="true" />
-            <element signature="e#5234#5238#0#HTML" expanded="true" />
-            <element signature="e#5591#5595#0#HTML" expanded="true" />
-            <element signature="e#5930#5934#0#HTML" expanded="true" />
-            <element signature="e#6273#6277#0#HTML" expanded="true" />
-            <element signature="e#6600#6604#0#HTML" expanded="true" />
-            <element signature="e#6959#6963#0#HTML" expanded="true" />
-            <element signature="e#7299#7303#0#HTML" expanded="true" />
-            <element signature="e#7656#7660#0#HTML" expanded="true" />
+            <element signature="e#3221#3225#0#HTML" expanded="true" />
+            <element signature="e#3495#3499#0#HTML" expanded="true" />
+            <element signature="e#4088#4092#0#HTML" expanded="true" />
+            <element signature="e#4664#4668#0#HTML" expanded="true" />
+            <element signature="e#5240#5244#0#HTML" expanded="true" />
+            <element signature="e#5597#5601#0#HTML" expanded="true" />
+            <element signature="e#5936#5940#0#HTML" expanded="true" />
+            <element signature="e#6279#6283#0#HTML" expanded="true" />
+            <element signature="e#6606#6610#0#HTML" expanded="true" />
+            <element signature="e#6965#6969#0#HTML" expanded="true" />
+            <element signature="e#7305#7309#0#HTML" expanded="true" />
+            <element signature="e#7662#7666#0#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/goods/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="30" column="38" lean-forward="false" selection-start-line="30" selection-start-column="38" selection-end-line="30" selection-end-column="38" />
+        <state relative-caret-position="352">
+          <caret line="79" column="50" lean-forward="true" selection-start-line="79" selection-start-column="50" selection-end-line="79" selection-end-column="50" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
           </folding>
