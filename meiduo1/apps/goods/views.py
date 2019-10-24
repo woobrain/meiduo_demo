@@ -4,20 +4,21 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.core.paginator import Paginator
 # Create your views here.
+from django.utils import timezone
 from django.views import View
 
-from apps.goods.models import GoodsCategory, SKU
+from apps.goods.models import GoodsCategory, SKU, GoodsVisitCount
 from apps.goods.utils import get_breadcrumb
 from apps.user1.utils import get_categories
 
 
 class ListView(View):
-    def get(self, request, category_id,page_num):
+    def get(self, request, category_id, page_num):
         try:
             category = GoodsCategory.objects.get(id=category_id)
         except GoodsCategory.DoesNotExist:
-            return render(request,'404.html')
-        sort = request.GET.get('sort','default')
+            return render(request, '404.html')
+        sort = request.GET.get('sort', 'default')
         categories = get_categories()
         breadcrumb = get_breadcrumb(category)
 
@@ -53,25 +54,25 @@ class ListView(View):
 
 
 class HotView(View):
-    def get(self,request,category_id):
+    def get(self, request, category_id):
         try:
             category = GoodsCategory.objects.get(id=category_id)
         except GoodsCategory.DoesNotExist:
-            return JsonResponse({"code":5555,"errmsg":"ok"})
-        hots = SKU.objects.filter(category=category,is_launched=True).order_by('-sales')[:2]
+            return JsonResponse({"code": 5555, "errmsg": "ok"})
+        hots = SKU.objects.filter(category=category, is_launched=True).order_by('-sales')[:2]
 
-        hot_list=[]
+        hot_list = []
         for sku in hots:
             hot_list.append({
-                'id':sku.id,
-                'default_image_url':sku.default_image.url,
-                'name':sku.name,
-                'price':sku.price
+                'id': sku.id,
+                'default_image_url': sku.default_image.url,
+                'name': sku.name,
+                'price': sku.price
 
             })
-        a=hot_list
+        a = hot_list
 
-        return JsonResponse({"code":0,"errmsg":"ok","hot_skus":hot_list})
+        return JsonResponse({"code": 0, "errmsg": "ok", "hot_skus": hot_list})
 
 
 from django import http
@@ -84,8 +85,7 @@ from utils.response_code import RETCODE
 
 
 class DetailView(View):
-
-    def get(self,request,sku_id):
+    def get(self, request, sku_id):
 
         # 获取当前sku的信息
         try:
@@ -140,5 +140,27 @@ class DetailView(View):
             'specs': goods_specs,
         }
 
-        return render(request,'detail.html',context)
+        return render(request, 'detail.html', context)
 
+
+class DetailVisitView(View):
+    def post(self, request, category_id):
+        try:
+            category = GoodsCategory.objects.get(id=category_id)
+        except GoodsCategory.DoesNotExist:
+            return JsonResponse({"code": 5555, "errmsg": "error"})
+
+        today = timezone.localdate()
+        try:
+            cg = GoodsVisitCount.objects.get(category=category, date=today)
+        except GoodsVisitCount.DoesNotExist:
+            GoodsVisitCount.objects.create(
+                category=category,
+                date=today,
+                count=1
+            )
+            return JsonResponse({"code": 0, "errmsg": "ok"})
+        else:
+            cg.count +=1
+            cg.save()
+            return JsonResponse({'code': RETCODE.OK, 'errmsg': 'ok'})
