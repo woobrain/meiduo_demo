@@ -242,3 +242,7 @@ EMAIL_HOST_USER = '15893775982@163.com'
 EMAIL_HOST_PASSWORD = 'wgy980120'
 #收件人看到的发件人
 # EMAIL_FROM = '美多商城<15893775982@163.com>'
+
+
+###############storage###############
+DEFAULT_FILE_STORAGE = 'utils.storage.FastDFSStorage'
