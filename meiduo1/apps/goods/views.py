@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.views import View
 
 from apps.goods.models import GoodsCategory, SKU
+from apps.user1.utils import get_categories
 
 
 class ListView(View):
@@ -13,10 +14,37 @@ class ListView(View):
             category = GoodsCategory.objects.get(id=category_id)
         except GoodsCategory.DoesNotExist:
             return render(request,'404.html')
+        sort = request.GET.get('sort','default')
+        categories = get_categories()
+        breadcrumb={
+            "cat1":'',
+            "cat2":'',
+            "cat3":'',
 
-        data = SKU.objects.filter(category_id=category_id)
+        }
+        # a = category.subs
+        if category.parent is None:
+            breadcrumb['cat1']=category
+        elif category.subs.count() == 0:
+            breadcrumb['cat3']=category
+            breadcrumb['cat2']=category.parent
+            breadcrumb['cat1']=category.parent.parent
+        else:
+            breadcrumb['cat2']=category
+            breadcrumb['cat1']=category.parent
 
-        paginator = Paginator(object_list=data,
+        if sort == 'price':
+            sort_field = 'price'
+        elif sort == 'hot':
+            sort_field = '-sales'
+        else:
+            sort = 'default'
+            sort_field = 'create_time'
+        skus = SKU.objects.filter(category=category, is_launched=True).order_by(sort_field)
+
+        # data = SKU.objects.filter(category_id=category_id)
+
+        paginator = Paginator(object_list=skus,
                               per_page=5,
                               )
         page_skus = paginator.page(page_num)
@@ -24,9 +52,9 @@ class ListView(View):
         total_page = paginator.num_pages
 
         context = {
-            # 'categories': categories,  # 频道分类
-            # 'breadcrumb': breadcrumb,  # 面包屑导航
-            # 'sort': sort,  # 排序字段
+            'categories': categories,  # 频道分类
+            'breadcrumb': breadcrumb,  # 面包屑导航
+            'sort': sort,  # 排序字段
             'category': category,  # 第三级分类
             'page_skus': page_skus,  # 分页后数据
             'total_page': total_page,  # 总页数
