@@ -41,6 +41,6 @@ urlpatterns = [
     url(r'', include('apps.oauth.urls',namespace='oauth')),
     url(r'', include('apps.areas.urls',namespace='areas')),
     url(r'', include('apps.goods.urls',namespace='goods')),
-    # url(r'', include('apps.myaddr.urls',namespace='addr')),
+    url(r'', include('apps.carts.urls',namespace='carts')),
     # url(r'', include('apps.goods.urls',namespace='goods')),
 ]

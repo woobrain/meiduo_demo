@@ -40,6 +40,7 @@ var vm = new Vue({
         render_carts(){
             // 渲染界面
             this.carts = JSON.parse(JSON.stringify(cart_skus));
+            console.log(this.carts);
             for (var i = 0; i < this.carts.length; i++) {
                 if (this.carts[i].selected == 'True') {
                     this.carts[i].selected = true;

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.areas',
     'apps.myaddr',
     'apps.goods',
+    'apps.carts',
     # 此时使用此种方法在apps模块中需要name='apps.user'
     # 'apps.user.apps.UserConfig'
 ]
@@ -179,6 +180,13 @@ CACHES = {
     "history": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    "carts": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/4",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
