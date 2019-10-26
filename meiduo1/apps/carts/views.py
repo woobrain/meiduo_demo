@@ -223,11 +223,12 @@ class CartsSelectedView(View):
         if user.is_authenticated:
             redis_con = get_redis_connection('carts')
             skus = redis_con.hkeys('user_%s'%user.id)
-            if selected:
-                for sku in skus:
+            for sku in skus:
+                if selected:
+
                     redis_con.sadd('selected_%s'%user.id,sku)
-            else:
-                for sku in skus:
+                else:
+
                     redis_con.srem('selected_%s'%user.id,sku)
             return JsonResponse({"code":0,"errmsg":"ok"})
         else:
