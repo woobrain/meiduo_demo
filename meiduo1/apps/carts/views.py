@@ -161,6 +161,7 @@ class CartsAddView(View):
                 'price': sku.price,
                 'amount': sku.price * count
             }
+
             return JsonResponse({"code":0,"errmsg":"ok","cart_sku":data})
         else:
             carts_info = request.COOKIES.get('carts')
@@ -213,3 +214,33 @@ class CartsAddView(View):
                 response = JsonResponse({"code":0,"errmsg":"ok"})
                 response.set_cookie('carts',cookie_carts,max_age=7*24*3600)
                 return response
+
+class CartsSelectedView(View):
+    def put(self,request):
+        data_str = json.loads(request.body.decode())
+        selected = data_str.get('selected')
+        user = request.user
+        if user.is_authenticated:
+            redis_con = get_redis_connection('carts')
+            skus = redis_con.hkeys('user_%s'%user.id)
+            if selected:
+                for sku in skus:
+                    redis_con.sadd('selected_%s'%user.id,sku)
+            else:
+                for sku in skus:
+                    redis_con.srem('selected_%s'%user.id,sku)
+            return JsonResponse({"code":0,"errmsg":"ok"})
+        else:
+            carts = request.COOKIES.get('carts')
+            if carts:
+                carts_dic = pickle.loads(base64.b64decode(carts))
+            else:
+                carts_dic = {}
+            sku_ids = carts_dic.keys()
+            for sku in sku_ids:
+                carts_dic[sku]['selected'] = True
+            a= carts_dic
+            new_carts = base64.b64encode(pickle.dumps(carts_dic))
+            response = JsonResponse({"code":0,"errmsg":"ok"})
+            response.set_cookie('carts',new_carts,max_age=7*24*3600)
+            return response
