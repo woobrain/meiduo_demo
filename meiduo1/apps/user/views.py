@@ -152,7 +152,7 @@ class LogoutView(View):
         # 清理session
         logout(request)
 
-        response = render(request, 'index.html')
+        response = redirect(reverse("user1:index"))
         # 清理cookie
         # response.set_cookie('username',None,max_age=0)
         response.delete_cookie('username')
