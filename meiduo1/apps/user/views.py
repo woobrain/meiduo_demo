@@ -7,6 +7,7 @@ from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+from apps.carts.utils import make_redis_cookie
 from apps.myaddr.models import Address
 from apps.user.models import User
 from apps.user.utils import check_active_email_url
@@ -144,6 +145,7 @@ class LoginView(View):
 
         response = redirect(reverse("user1:index"))
         response.set_cookie('username', user.username, max_age=3600 * 24)
+        make_redis_cookie(request,user,response)
         return response
 
 
