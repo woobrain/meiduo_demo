@@ -188,3 +188,28 @@ class CartsAddView(View):
             response = JsonResponse({"code":0,"errmsg":"ok","cart_sku":data})
             response.set_cookie('carts', carts_list, max_age=7 * 24 * 3600)
             return response
+
+    def delete(self,request):
+        data = json.loads(request.body.decode())
+        sku_id = data.get('sku_id')
+        user = request.user
+        # 验证
+        # 判断
+        if user.is_authenticated:
+            redis_con = get_redis_connection('carts')
+            redis_con.hdel('user_%s'%user.id,sku_id)
+            redis_con.srem('selected_%s'%user.id,sku_id)
+            return JsonResponse({"code":0,"errmsg":"ok"})
+        else:
+            carts_data = request.COOKIES.get('carts')
+            if carts_data:
+                carts_dic = pickle.loads(base64.b64decode(carts_data))
+            else:
+                carts_dic={}
+
+            if sku_id in carts_dic:
+                del carts_dic[sku_id]
+                cookie_carts = base64.b64encode(pickle.dumps(carts_dic))
+                response = JsonResponse({"code":0,"errmsg":"ok"})
+                response.set_cookie('carts',cookie_carts,max_age=7*24*3600)
+                return response
