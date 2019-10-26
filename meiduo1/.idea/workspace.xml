@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f14298bc-038f-4ab1-a4bb-5129b892d8d6" name="Default" comment="登录与非登录用户购物车的保存与展示">
+    <list default="true" id="f14298bc-038f-4ab1-a4bb-5129b892d8d6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/carts/views.py" afterPath="$PROJECT_DIR$/apps/carts/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/user/views.py" afterPath="$PROJECT_DIR$/apps/user/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/index.html" afterPath="$PROJECT_DIR$/templates/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/user_center_info.html" afterPath="$PROJECT_DIR$/templates/user_center_info.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -819,7 +816,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571992866403</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="登录与非登录用户购物车的修改">
+      <created>1572058489011</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1572058489011</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TodoView">
@@ -913,7 +917,8 @@
     <MESSAGE value="记录用户每天访问量的实现" />
     <MESSAGE value="浏览历史记录的保存与显示" />
     <MESSAGE value="登录与非登录用户购物车的保存与展示" />
-    <option name="LAST_COMMIT_MESSAGE" value="登录与非登录用户购物车的保存与展示" />
+    <MESSAGE value="登录与非登录用户购物车的修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="登录与非登录用户购物车的修改" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
