@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^addresses/(?P<address_id>\d+)/title/$', views.UpdateTitleAddressView.as_view(),name='title'),
     url(r'^usernames/(?P<username>[a-zA-Z0-9_-]{5,20})/$', views.RegisterUsernameCountView.as_view(),name='username'),
     url(r'^mobile/(?P<mobile>[1][345789]\d{9})/$', views.RegisterUserPhoneCount.as_view(),name='mobile'),
+    # url(r'^carts/simple/$', views.CartSimpleView.as_view(),name='simple'),
     # url(r'code/$', views.RegisterUsersmsCount.as_view(),name='sms'),
 
 ]
