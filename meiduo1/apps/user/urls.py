@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^mobile/(?P<mobile>[1][345789]\d{9})/$', views.RegisterUserPhoneCount.as_view(),name='mobile'),
     # url(r'^carts/simple/$', views.CartSimpleView.as_view(),name='simple'),
     # url(r'code/$', views.RegisterUsersmsCount.as_view(),name='sms'),
+    url(r'^oders/placeorder/$', views.PlaceOrderView.as_view(), name='placeorder'),
 
 ]

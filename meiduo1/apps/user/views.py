@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from apps.carts.utils import make_redis_cookie
+from apps.goods.models import SKU
 from apps.myaddr.models import Address
 from apps.user.models import User
 from apps.user.utils import check_active_email_url
@@ -145,7 +146,7 @@ class LoginView(View):
 
         response = redirect(reverse("user1:index"))
         response.set_cookie('username', user.username, max_age=3600 * 24)
-        make_redis_cookie(request,user,response)
+        response = make_redis_cookie(request,user,response)
         return response
 
 
@@ -425,10 +426,9 @@ class UpdateDestroyAddressView(LoginRequiredMixin, View):
 
 
 class DefaultAddressView(LoginRequiredMixin, View):
-    """设置默认地址"""
+
 
     def put(self, request, address_id):
-        """设置默认地址"""
         try:
             # 接收参数,查询地址
             address = Address.objects.get(id=address_id)
@@ -468,5 +468,39 @@ class UpdateTitleAddressView(LoginRequiredMixin, View):
         return JsonResponse({'code': 0, 'errmsg': '设置地址标题成功'})
 
 
+class PlaceOrderView(LoginRequiredMixin,View):
+    def get(self,request):
+        user = request.user
+        try:
+            address_set = Address.objects.filter(user=user,is_deleted=False)
+        except Address.DoesNotExist:
+            address_set = None
 
+        redis_con = get_redis_connection('carts')
+        selected_list = redis_con.smembers('selected_%s'%user.id)
+        carts_list = redis_con.hgetall('user_%s'%user.id)
+        order_info = {}
+        for sku_id in selected_list:
+            order_info[sku_id] = int(carts_list[sku_id])
+        skus = SKU.objects.filter(id__in=order_info.keys())
+        total_count = 0
+        total_amount = 0
+        freight = 10
+        for sku in skus:
+            sku.count = int(carts_list[str(sku.id).encode()])
+            sku.amount = sku.count * sku.price
+            total_count += sku.count
+            total_amount += sku.count * sku.price
+
+        context = {
+            'addresses':address_set,
+            'skus':skus,
+            'total_count': total_count,
+            'total_amount': total_amount,
+            'freight': freight,
+            'payment_amount': total_amount + freight
+
+        }
+
+        return render(request,'place_order.html',context)
 
