@@ -58,9 +58,18 @@ class OrderComView(LoginRequiredMixin,View):
                     for sku_id in skus:
                         sku = SKU.objects.get(id=sku_id)
                         count = int(info_list[sku_id])
+                        import time
+                        time.sleep(3)
                         if sku.stock < count:
                             transaction.savepoint_rollback(savepoint)
                             return JsonResponse({"code":5555,"errmsg":"库存不足"})
+                        old_stock = sku.stock
+                        new_stock = sku.stock - count
+                        new_sales = sku.sales + count
+                        sk = SKU.objects.filter(id=sku_id,stock=old_stock).update(stock=new_stock,sales=new_sales)
+                        if sk == 0:
+                            transaction.savepoint_rollback(savepoint)
+                            return JsonResponse({"code":5555,"errmsg":"下单失败"})
                         OrderGoods.objects.create(
                             order=order,
                             sku_id=sku_id,
@@ -79,7 +88,8 @@ class OrderComView(LoginRequiredMixin,View):
                     return JsonResponse({"code": 5555, "errmsg": "下单失败"})
                 else:
                     transaction.savepoint_commit(savepoint)
-
-                redis_con.hdel('user_%s'%user.id,*skus)
-                redis_con.srem('selected_%s'%user.id,*skus)
+                pl = redis_con.pipeline()
+                pl.hdel('user_%s'%user.id,*skus)
+                pl.srem('selected_%s'%user.id,*skus)
+                pl.execute()
                 return JsonResponse({"code":0,"errmsg":"ok"})
