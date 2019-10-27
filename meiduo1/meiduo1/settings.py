@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.myaddr',
     'apps.goods',
     'apps.carts',
+    'apps.orders',
     # 此时使用此种方法在apps模块中需要name='apps.user'
     # 'apps.user.apps.UserConfig'
 ]

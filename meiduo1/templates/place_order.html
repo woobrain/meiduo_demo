@@ -57,8 +57,13 @@
     {% if addresses %}
         <dt>寄送到：</dt>
         {% for address in addresses %}
-        <dd @click="nowsite={{ address.id }}"><input type="radio" v-model="nowsite" value="{{ address.id }}">{{ address.province }} {{ address.city }} {{ address.district }} （{{ address.receiver }} 收） {{ address.mobile }}</dd>
+        <dd @click="nowsite={{ address.id }}">
+            <input type="radio" v-model="nowsite" value="{{ address.id }}">{{ address.province }} {{ address.city }} {{ address.district }} （{{ address.receiver }} 收） {{ address.mobile }}
+            <label v-show="{{ default_address_id }}=={{ address.id }}">  (默认地址)</label>
+        </dd>
+
         {% endfor %}
+
     {% endif %}
     </dl>
     <a href="{{ url('user:address') }}" class="edit_site">编辑收货地址</a>

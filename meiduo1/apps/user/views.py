@@ -471,6 +471,7 @@ class UpdateTitleAddressView(LoginRequiredMixin, View):
 class PlaceOrderView(LoginRequiredMixin,View):
     def get(self,request):
         user = request.user
+        user_id = User.objects.get(id=user.id)
         try:
             address_set = Address.objects.filter(user=user,is_deleted=False)
         except Address.DoesNotExist:
@@ -498,7 +499,8 @@ class PlaceOrderView(LoginRequiredMixin,View):
             'total_count': total_count,
             'total_amount': total_amount,
             'freight': freight,
-            'payment_amount': total_amount + freight
+            'payment_amount': total_amount + freight,
+            'default_address_id':user_id.default_address_id
 
         }
 
