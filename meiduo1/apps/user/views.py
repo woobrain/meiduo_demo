@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect
 from apps.carts.utils import make_redis_cookie
 from apps.goods.models import SKU
 from apps.myaddr.models import Address
+from apps.orders.models import OrderInfo, OrderGoods
 from apps.user.models import User
 from apps.user.utils import check_active_email_url
 from celery_tasks.email.tasks import send_active_email
@@ -146,7 +147,7 @@ class LoginView(View):
 
         response = redirect(reverse("user1:index"))
         response.set_cookie('username', user.username, max_age=3600 * 24)
-        response = make_redis_cookie(request,user,response)
+        response = make_redis_cookie(request, user, response)
         return response
 
 
@@ -426,8 +427,6 @@ class UpdateDestroyAddressView(LoginRequiredMixin, View):
 
 
 class DefaultAddressView(LoginRequiredMixin, View):
-
-
     def put(self, request, address_id):
         try:
             # 接收参数,查询地址
@@ -468,18 +467,18 @@ class UpdateTitleAddressView(LoginRequiredMixin, View):
         return JsonResponse({'code': 0, 'errmsg': '设置地址标题成功'})
 
 
-class PlaceOrderView(LoginRequiredMixin,View):
-    def get(self,request):
+class PlaceOrderView(LoginRequiredMixin, View):
+    def get(self, request):
         user = request.user
         user_id = User.objects.get(id=user.id)
         try:
-            address_set = Address.objects.filter(user=user,is_deleted=False)
+            address_set = Address.objects.filter(user=user, is_deleted=False)
         except Address.DoesNotExist:
             address_set = None
 
         redis_con = get_redis_connection('carts')
-        selected_list = redis_con.smembers('selected_%s'%user.id)
-        carts_list = redis_con.hgetall('user_%s'%user.id)
+        selected_list = redis_con.smembers('selected_%s' % user.id)
+        carts_list = redis_con.hgetall('user_%s' % user.id)
         order_info = {}
         for sku_id in selected_list:
             order_info[sku_id] = int(carts_list[sku_id])
@@ -494,18 +493,28 @@ class PlaceOrderView(LoginRequiredMixin,View):
             total_amount += sku.count * sku.price
 
         context = {
-            'addresses':address_set,
-            'skus':skus,
+            'addresses': address_set,
+            'skus': skus,
             'total_count': total_count,
             'total_amount': total_amount,
             'freight': freight,
             'payment_amount': total_amount + freight,
-            'default_address_id':user_id.default_address_id
+            'default_address_id': user_id.default_address_id
 
         }
 
-        return render(request,'place_order.html',context)
+        return render(request, 'place_order.html', context)
 
-class CenterOrder(LoginRequiredMixin,View):
-    def get(self,request):
-        return render(request,'user_center_order.html')
+
+# class CenterOrder(LoginRequiredMixin, View):
+#     def get(self, request):
+#         # order_id status total_amount sku.name sku.id count price create_time freight
+#         orders = OrderInfo.objects.all()
+#         sku = SKU.objects.all()
+#         goods = OrderGoods.objects.all()
+#
+#         context = {}
+#         for order in orders:
+#             a = order.order_id
+#             context[a] =
+#         return render(request, 'user_center_order.html')
