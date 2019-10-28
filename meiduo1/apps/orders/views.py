@@ -59,7 +59,7 @@ class OrderComView(LoginRequiredMixin,View):
                         sku = SKU.objects.get(id=sku_id)
                         count = int(info_list[sku_id])
                         import time
-                        time.sleep(3)
+                        time.sleep(1)
                         if sku.stock < count:
                             transaction.savepoint_rollback(savepoint)
                             return JsonResponse({"code":5555,"errmsg":"库存不足"})

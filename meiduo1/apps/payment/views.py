@@ -34,7 +34,7 @@ class PayComView(LoginRequiredMixin, View):
         )
         # 如果你是 Python 3的用户，使用默认的字符串即可
         subject = "测试订单"
-        a = order.total_amount
+
         # 电脑网站支付，需要跳转到https://openapi.alipay.com/gateway.do? + order_string
         order_string = alipay.api_alipay_trade_page_pay(
             out_trade_no=order_id,

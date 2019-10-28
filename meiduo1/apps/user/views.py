@@ -506,3 +506,6 @@ class PlaceOrderView(LoginRequiredMixin,View):
 
         return render(request,'place_order.html',context)
 
+class CenterOrder(LoginRequiredMixin,View):
+    def get(self,request):
+        return render(request,'user_center_order.html')
