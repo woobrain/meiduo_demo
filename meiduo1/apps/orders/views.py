@@ -92,4 +92,21 @@ class OrderComView(LoginRequiredMixin,View):
                 pl.hdel('user_%s'%user.id,*skus)
                 pl.srem('selected_%s'%user.id,*skus)
                 pl.execute()
-                return JsonResponse({"code":0,"errmsg":"ok"})
+                return JsonResponse({"code":0,"errmsg":"ok","order_id":order_id,"pay_method":pay_method,"payment_amount":order.total_amount})
+
+
+class OrderSucView(LoginRequiredMixin, View):
+    def get(self, request):
+        # http: // www.meiduo.site: 8000 / orders / success /?order_id = undefined & payment_amount = 19507 & pay_method = 2
+        order_id = request.GET.get('order_id')
+        payment_amount = request.GET.get('payment_amount')
+        pay_method = request.GET.get('pay_method')
+        user = request.user
+
+        context = {
+            'order_id': order_id,
+            'payment_amount': payment_amount,
+            'pay_method': pay_method
+        }
+
+        return render(request, 'order_success.html', context)
