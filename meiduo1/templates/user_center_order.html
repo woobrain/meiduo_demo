@@ -58,7 +58,7 @@
 			<h3>用户中心</h3>
 			<ul>
 				<li><a href="{{ url('user:center') }}">· 个人信息</a></li>
-				<li><a href="{{ url('user:centerorder') }}" class="active">· 全部订单</a></li>
+				<li><a href="user_center_order.html" class="active">· 全部订单</a></li>
 				<li><a href="{{ url('user:address') }}">· 收货地址</a></li>
 				<li><a href="../static/user_center_pass.html">· 修改密码</a></li>
 			</ul>
@@ -102,6 +102,7 @@
                                     </td>
                                     <td width="15%">{{ ids.total_amount }}元<br>含运费：{{ ids.freight }}元</td>
                                     <td width="15%">{{ ids.method }}</td>
+{#                                    <td width="15%"><a href="javascript:;" class="oper_btn"  @click="oper_btn_click('{{ids.order_id}}', {{ ids.status_id }})">{{ ids.status }}</a></td>#}
                                     <td width="15%"><a href="javascript:;" class="oper_btn"  @click="oper_btn_click('{{ids.order_id}}', {{ ids.status_id }})">{{ ids.status }}</a></td>
                                 </tr>
                             </tbody>
@@ -135,10 +136,10 @@
 	<script>
         $(function () {
             $('#pagination').pagination({
-                currentPage: 1,
-                totalPage: 3,
+                currentPage: {{ page_num }},
+                totalPage: {{ page_total }},
                 callback:function (current) {
-                    // location.href = '/orders/info/' + current + '/';
+                    location.href = '/orders/info/' + current + '/';
                 }
             })
         });

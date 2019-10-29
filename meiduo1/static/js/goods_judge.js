@@ -9,7 +9,7 @@ var vm = new Vue({
     mounted: function(){
         // 渲染评价界面
         this.render_comments();
-
+        // this.skus = JSON.parse(JSON.stringify(skus));
     },
     methods: {
         // 渲染评价界面
@@ -28,8 +28,6 @@ var vm = new Vue({
         // 鼠标在评分星星上滑动
         on_stars_mouseover(index, score){
             console.log(this.skus);
-
-
             this.skus[index].score = score;
             this.skus[index].display_score = score * 20;
         },
@@ -64,6 +62,7 @@ var vm = new Vue({
                     .then(response => {
                         if (response.data.code == '0') {
                             // 删除评价后的商品
+                            alert('已评价')
                             this.skus.splice(index, 1);
                         } else if (response.data.code == '4101') {
                             location.href = '/login/?next=/orders/comment/';

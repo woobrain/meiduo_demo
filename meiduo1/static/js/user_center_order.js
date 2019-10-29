@@ -11,8 +11,7 @@ var vm = new Vue({
     },
     methods: {
         oper_btn_click(order_id, status){
-            // var order_id = get_query_string('order_id');
-            // console.log("\@"+order_id+"\@");
+
 
             if (status == '1') {
                 // 待支付
@@ -36,7 +35,8 @@ var vm = new Vue({
                 location.href = '/orders/comment/?order_id=' + order_id;
             } else {
                 // 其他：待收货。。。
-                location.href = '/';
+                alert('此商品已经评价!')
+                // location.href = '/';
             }
         },
     }

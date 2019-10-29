@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 from django.contrib.auth import logout
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
@@ -508,14 +509,22 @@ class PlaceOrderView(LoginRequiredMixin, View):
 
 
 class CenterOrder(LoginRequiredMixin, View):
-    def get(self, request):
+    def get(self, request,page_num):
         # order_id status total_amount  count price create_time freight
         # sku.name  sku.id
         # status freight user_id order_id create_time
         # order_id sku_id count price total_amount
         user = request.user
+
         if user.is_authenticated:
-            orders = OrderInfo.objects.all()
+            orders = OrderInfo.objects.all().order_by('-create_time')
+            paginator = Paginator(object_list=orders,per_page=2)
+            try:
+                page_skus = paginator.page(page_num)
+            except:
+                return HttpResponse('空页面')
+            pages = paginator.num_pages
+
             content = []
             context = {}
             utils_info = []
@@ -523,16 +532,16 @@ class CenterOrder(LoginRequiredMixin, View):
                 goods = OrderGoods.objects.filter(order=order)
 
                 for good in goods:
-
                     sku = SKU.objects.get(id=good.sku_id)
+
                     content.append({
-                        "name":sku.name,
-                        "id":sku.id,
-                        "order_id":str(order.order_id),
-                        "count":good.count,
-                        "price":int(good.price),
-                        "default_image":sku.default_image.url,
-                        "singer_amount":good.count * int(good.price),
+                        "name": sku.name,
+                        "id": sku.id,
+                        "order_id": str(order.order_id),
+                        "count": good.count,
+                        "price": int(good.price),
+                        "default_image": sku.default_image.url,
+                        "singer_amount": good.count * int(good.price),
 
                     })
                 print(content)
@@ -540,10 +549,10 @@ class CenterOrder(LoginRequiredMixin, View):
                     "freight": str(order.freight),
                     "order_id": str(order.order_id),
                     "create_time": order.create_time.strftime("%Y-%m-%d %H:%M:%S"),
-                    "method":OrderInfo.PAY_METHOD_CHOICES[order.pay_method - 1][1],
+                    "method": OrderInfo.PAY_METHOD_CHOICES[order.pay_method - 1][1],
                     "total_amount": str(order.total_amount),
-                    "status":OrderInfo.ORDER_STATUS_CHOICES[order.status - 1][1],
-                    "status_id":order.status
+                    "status": OrderInfo.ORDER_STATUS_CHOICES[order.status - 1][1],
+                    "status_id": order.status
                 })
                 context[order.order_id] = content
 
@@ -565,37 +574,70 @@ class CenterOrder(LoginRequiredMixin, View):
                 #     }
 
             context_all = {
-                "utils_info":utils_info,
-                "all_info":context
+                "page_num":page_num,
+                "page_total":pages,
+                "page_skus":page_skus,
+                "utils_info": utils_info,
+                "all_info": context
             }
             print(context_all)
-            return render(request, 'user_center_order.html',context_all)
+            return render(request, 'user_center_order.html', context_all)
         else:
             return redirect(reverse('user:login'))
 
 
 # 返回评价页面之前处理
-class GoodsJudge(LoginRequiredMixin,View):
-    def get(self,request):
+class GoodsJudge(LoginRequiredMixin, View):
+    def get(self, request):
         order_id = request.GET.get('order_id')
         order = OrderInfo.objects.get(order_id=order_id)
         goods = OrderGoods.objects.filter(order=order)
-        content=[]
+        content = []
         context = {}
+
+
         for good in goods:
             sku = SKU.objects.get(id=good.sku_id)
             content.append({
-                "score":good.score,
-                "comment":good.comment,
-                "name":sku.name,
-                "price":sku.price,
-                "default_image":sku.default_image.url
+                "score": str(good.score),
+                "comment": good.comment,
+                "name": sku.name,
+                "price": str(sku.price),
+                "default_image": sku.default_image.url,
+                "sku_id": sku.id,
+                "display_score": OrderGoods.SCORE_CHOICES[good.score][1],
+                "is_anonymous": str(good.is_anonymous),
+                "order_id":good.order_id
             })
         context = {
-            "skus":content
+            "skus": content
         }
-        return render(request,'goods_judge.html',context)
+        return render(request, 'goods_judge.html', context)
 
-    def post(self,request):
-        pass
+    def post(self, request):
+        data = json.loads(request.body.decode())
+        order_id = data.get('order_id')
+        sku_id = data.get('sku_id')
+        comment = data.get('comment')
+        score = data.get('score')
+        is_anonymous = data.get('is_anonymous')
+        user = request.user
+
+        if not all([order_id, comment, sku_id]):
+            return JsonResponse({"code": 5555, "errmsg": "参数不全"})
+        if len(comment) <= 5:
+            return JsonResponse({"code": 5555, "errmsg": "评论内容小于五个字"})
+        if user.is_authenticated:
+            try:
+                user = OrderInfo.objects.filter(order_id=order_id)
+                order = OrderGoods.objects.filter(sku_id=sku_id, order_id=order_id).update(comment=comment,
+                                                                                        is_anonymous=is_anonymous,
+                                                                                        score=score)
+                user.update(status=OrderInfo.ORDER_STATUS_ENUM['FINISHED'])
+            except OrderGoods.DoesNotExist:
+                return JsonResponse({"code": 5555, "errmsg": "评价失败"})
+            return JsonResponse({"code": 0, "errmsg": "ok"})
+        else:
+            return JsonResponse({"code": 4101, "errmsg": "请登录"})
+
 

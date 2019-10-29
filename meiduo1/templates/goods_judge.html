@@ -52,40 +52,41 @@
         </div>		
 	</div>
 
-	<div class="judge_con" >
-        {% for skuss in skus %}
-        <div class="judge_goods fl">     
+	<div class="judge_con" v-for="(skuss, index) in skus" v-cloak>
+{#        {% for skuss,index in skus %}#}
+
+        <div class="judge_goods fl">
             <ul>
                 <li>
-                    <a href="#"><img src="{{ skuss.default_image }}"></a>
-                    <h4><a href="#">{{ skuss.name }}</a></h4>
-                    <div class="price">￥{{ skuss.price }}</div>
+                    <a href="#"><img :src="skuss.default_image"></a>
+                    <h4><a href="#">[[ skuss.name ]]</a></h4>
+                    <div class="price">￥[[ skuss.price ]]</div>
                 </li>
-            </ul> 
+            </ul>
         </div>
         <div class="judge_goods_input fr">
             <div class="judge_item">
                 <label>商品满意度</label>
 {#                @click="on_stars_click(0, '1')" @mouseover="on_stars_mouseover(0,'1')" @mouseout="on_stars_mouseout(index)"#}
                 <div class="stars fl" >
-                    <a href="javascript:;" class="star_off"></a>
-                    <a href="javascript:;" class="star_off"></a>
-                    <a href="javascript:;" class="star_off"></a>
-                    <a href="javascript:;" class="star_off"></a>
-                    <a href="javascript:;" class="star_off"></a>
+                    <a href="javascript:;" class="star_off" @click="on_stars_click(index, index+1)" @mouseover="on_stars_mouseover(index,index+1)" @mouseout="on_stars_mouseout(index)"></a>
+                    <a href="javascript:;" class="star_off" @click="on_stars_click(index, index+2)" @mouseover="on_stars_mouseover(index,index+2)" @mouseout="on_stars_mouseout(index)"></a>
+                    <a href="javascript:;" class="star_off" @click="on_stars_click(index, index+3)" @mouseover="on_stars_mouseover(index,index+3)" @mouseout="on_stars_mouseout(index)"></a>
+                    <a href="javascript:;" class="star_off" @click="on_stars_click(index, index+4)" @mouseover="on_stars_mouseover(index,index+4)" @mouseout="on_stars_mouseout(index)"></a>
+                    <a href="javascript:;" class="star_off" @click="on_stars_click(index, index+5)" @mouseover="on_stars_mouseover(index,index+5)" @mouseout="on_stars_mouseout(index)"></a>
                 </div>
-                <div class="score">{{ skuss.score }}</div>
+                <div class="score" >[[skuss.display_score]]</div>
             </div>
             <div class="judge_item">
                 <label>发表评价</label>
-                <textarea class="judge_area">{{ skuss.comment }}</textarea>
+                <textarea class="judge_area" v-model="skuss.comment">[[skuss.comment]]</textarea>
             </div>
             <div class="judge_item">
                 <input type="input" value="提 交" class="judge_sub" @click="save_comment(index)">
-                <input type="checkbox" class="no_name" name="no_name"> 匿名评价
+                <input type="checkbox" class="no_name" name="no_name" v-model="skuss.is_anonymous"> 匿名评价
             </div>
         </div>
-        {% endfor %}
+{#        {% endfor %}#}
     </div>
 	
 	<div class="footer">
