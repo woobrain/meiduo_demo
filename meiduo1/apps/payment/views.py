@@ -97,6 +97,6 @@ class PayStatusView(View):
                 order_id=order_id
             )
 
-            OrderInfo.objects.filter(order_id=order_id).update(status=OrderInfo.ORDER_STATUS_ENUM['UNSEND'])
+            OrderInfo.objects.filter(order_id=order_id).update(status=OrderInfo.ORDER_STATUS_ENUM['UNCOMMENT'])
 
         return render(request, 'pay_success.html',context={"order_id":order_id})

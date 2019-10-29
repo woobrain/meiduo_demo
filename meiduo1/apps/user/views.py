@@ -1,5 +1,6 @@
 import json
 import re
+from datetime import datetime
 
 from django.contrib.auth import logout
 from django.http import HttpResponse
@@ -506,15 +507,95 @@ class PlaceOrderView(LoginRequiredMixin, View):
         return render(request, 'place_order.html', context)
 
 
-# class CenterOrder(LoginRequiredMixin, View):
-#     def get(self, request):
-#         # order_id status total_amount sku.name sku.id count price create_time freight
-#         orders = OrderInfo.objects.all()
-#         sku = SKU.objects.all()
-#         goods = OrderGoods.objects.all()
-#
-#         context = {}
-#         for order in orders:
-#             a = order.order_id
-#             context[a] =
-#         return render(request, 'user_center_order.html')
+class CenterOrder(LoginRequiredMixin, View):
+    def get(self, request):
+        # order_id status total_amount  count price create_time freight
+        # sku.name  sku.id
+        # status freight user_id order_id create_time
+        # order_id sku_id count price total_amount
+        user = request.user
+        if user.is_authenticated:
+            orders = OrderInfo.objects.all()
+            content = []
+            context = {}
+            utils_info = []
+            for order in orders:
+                goods = OrderGoods.objects.filter(order=order)
+
+                for good in goods:
+
+                    sku = SKU.objects.get(id=good.sku_id)
+                    content.append({
+                        "name":sku.name,
+                        "id":sku.id,
+                        "order_id":str(order.order_id),
+                        "count":good.count,
+                        "price":int(good.price),
+                        "default_image":sku.default_image.url,
+                        "singer_amount":good.count * int(good.price),
+
+                    })
+                print(content)
+                utils_info.append({
+                    "freight": str(order.freight),
+                    "order_id": str(order.order_id),
+                    "create_time": order.create_time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "method":OrderInfo.PAY_METHOD_CHOICES[order.pay_method - 1][1],
+                    "total_amount": str(order.total_amount),
+                    "status":OrderInfo.ORDER_STATUS_CHOICES[order.status - 1][1],
+                    "status_id":order.status
+                })
+                context[order.order_id] = content
+
+                # context = {
+                #     "order_id": order.order_id,
+                #     "create_time": order.create_time,
+                #     "freight": str(order.freight),
+                #     "all_info": content
+                # }
+                #     content[order.order_id] = {
+                #         "name": sku.name,
+                #         "id":sku.id,
+                #         "status":order.status,
+                #         "freight":str(order.freight),
+                #         "create_time": order.create_time,
+                #         "count":good.count,
+                #         "price":str(good.price),
+                #         "total_amount":str(order.total_amount)
+                #     }
+
+            context_all = {
+                "utils_info":utils_info,
+                "all_info":context
+            }
+            print(context_all)
+            return render(request, 'user_center_order.html',context_all)
+        else:
+            return redirect(reverse('user:login'))
+
+
+# 返回评价页面之前处理
+class GoodsJudge(LoginRequiredMixin,View):
+    def get(self,request):
+        order_id = request.GET.get('order_id')
+        order = OrderInfo.objects.get(order_id=order_id)
+        goods = OrderGoods.objects.filter(order=order)
+        content=[]
+        context = {}
+        for good in goods:
+            sku = SKU.objects.get(id=good.sku_id)
+            content.append({
+                "score":good.score,
+                "comment":good.comment,
+                "name":sku.name,
+                "price":sku.price,
+                "default_image":sku.default_image.url
+            })
+        context = {
+            "skus":content
+        }
+        return render(request,'goods_judge.html',context)
+
+    def post(self,request):
+        pass
+

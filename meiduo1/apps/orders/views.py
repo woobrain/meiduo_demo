@@ -29,11 +29,11 @@ class OrderComView(LoginRequiredMixin,View):
                 addr = Address.objects.get(id=address_id)
             except:
                 return JsonResponse({"code":5555,"errmsg":"不存在该地址"})
-            if pay_method not in [OrderInfo.PAY_METHODS_ENUM['CASH'],OrderInfo.PAY_METHODS_ENUM['ALIPAY']]:
+            if int(pay_method) not in [OrderInfo.PAY_METHODS_ENUM['CASH'],OrderInfo.PAY_METHODS_ENUM['ALIPAY']]:
                 return JsonResponse({"code":5555,"errmsg":"请选择支付方式"})
             order_id = timezone.localtime().strftime("%Y%m%d%H%M%s") + '%09d'%user.id
-            if pay_method == OrderInfo.PAY_METHODS_ENUM['CASH']:
-                status_id = OrderInfo.ORDER_STATUS_ENUM['UNSEND']
+            if int(pay_method) == OrderInfo.PAY_METHODS_ENUM['CASH']:
+                status_id = OrderInfo.ORDER_STATUS_ENUM['UNCOMMENT']
             else:
                 status_id = OrderInfo.ORDER_STATUS_ENUM['UNPAID']
             # total_count = 0
@@ -58,8 +58,8 @@ class OrderComView(LoginRequiredMixin,View):
                     for sku_id in skus:
                         sku = SKU.objects.get(id=sku_id)
                         count = int(info_list[sku_id])
-                        import time
-                        time.sleep(1)
+                        # import time
+                        # time.sleep(1)
                         if sku.stock < count:
                             transaction.savepoint_rollback(savepoint)
                             return JsonResponse({"code":5555,"errmsg":"库存不足"})

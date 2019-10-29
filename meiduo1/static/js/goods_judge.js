@@ -9,11 +9,13 @@ var vm = new Vue({
     mounted: function(){
         // 渲染评价界面
         this.render_comments();
+
     },
     methods: {
         // 渲染评价界面
         render_comments(){
             this.skus = JSON.parse(JSON.stringify(skus));
+            console.log(this.skus);
             for(var i=0;i<this.skus.length;i++){
                 this.skus[i].url = '/goods/' + this.skus[i].sku_id + '.html';
                 Vue.set(this.skus[i], 'score', 0); // 记录随鼠标变动的星星数
@@ -25,6 +27,9 @@ var vm = new Vue({
         },
         // 鼠标在评分星星上滑动
         on_stars_mouseover(index, score){
+            console.log(this.skus);
+
+
             this.skus[index].score = score;
             this.skus[index].display_score = score * 20;
         },

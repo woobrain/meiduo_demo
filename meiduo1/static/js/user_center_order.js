@@ -4,12 +4,16 @@ var vm = new Vue({
     delimiters: ['[[', ']]'],
     data: {
         host: host,
+        ids:[]
     },
     mounted(){
 
     },
     methods: {
         oper_btn_click(order_id, status){
+            // var order_id = get_query_string('order_id');
+            // console.log("\@"+order_id+"\@");
+
             if (status == '1') {
                 // 待支付
                 var url = this.host + '/payment/' + order_id + '/';

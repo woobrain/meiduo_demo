@@ -64,64 +64,51 @@
 			</ul>
 		</div>
 		<div class="right_content clearfix">
+
 			<h3 class="common_title2">全部订单</h3>
-			<ul class="order_list_th w978 clearfix">
-				<li class="col01">2016-8-21 17:36:24</li>
-				<li class="col02">订单号：{{ order.id }}</li>
-			</ul>
+            {% for order_id,infos in all_info.items() %}
+{#                {% for order in order_id %}#}
+                {% for ids in utils_info %}
+                    {% if ids.order_id == order_id %}
 
-			<table class="order_list_table w980">
-				<tbody>
-					<tr>
-						<td width="55%">
-							<ul class="order_goods_list clearfix">					
-								<li class="col01"><img src="../static/images/goods/goods001.jpg"></li>
-								<li class="col02"><span>360手机 N6 Pro 全网通</span><em>2688.00元</em></li>
-								<li class="col03">1</li>
-								<li class="col04">2688.00元</li>	
-							</ul>
-							<ul class="order_goods_list clearfix">					
-								<li class="col01"><img src="../static/images/goods/goods001.jpg"></li>
-								<li class="col02"><span>360手机 N6 Pro 全网通</span><em>2688.00元</em></li>
-								<li class="col03">1</li>
-								<li class="col04">2688.00元</li>	
-							</ul>
-						</td>
-						<td width="15%">5276.00元<br>含运费：10.00元</td>
-						<td width="15%">已付款</td>
-						<td width="15%"><a href="../static/goods_judge.html" class="oper_btn">待评价</a></td>
-					</tr>
-				</tbody>
-			</table>
-			
-{#			<ul class="order_list_th w978 clearfix">#}
-{#				<li class="col01">2016-8-21 17:36:24</li>#}
-{#				<li class="col02">订单号：56872934</li>#}
-{#			</ul>#}
-{#			<table class="order_list_table w980">#}
-{#				<tbody>#}
-{#					<tr>#}
-{#						<td width="55%">#}
-{#							<ul class="order_goods_list clearfix">#}
-{#								<li class="col01"><img src="../static/images/goods/goods002.jpg"></li>#}
-{#								<li class="col02"><span>iphoneX N6 Pro 全网通</span><em>7899.00元</em></li>#}
-{#								<li class="col03">1</li>#}
-{#								<li class="col04">7899.00元</li>#}
-{#							</ul>#}
-{#							<ul class="order_goods_list clearfix">#}
-{#								<li class="col01"><img src="../static/images/goods/goods002.jpg"></li>#}
-{#								<li class="col02"><span>iphoneX N6 Pro 全网通</span><em>7899.00元</em></li>#}
-{#								<li class="col03">1</li>#}
-{#								<li class="col04">7899.00元</li>#}
-{#							</ul>#}
-{#						</td>#}
-{#						<td width="15%">15798.00元<br>含运费：10.00元</td>#}
-{#						<td width="15%">待付款</td>#}
-{#						<td width="15%"><a href="javascript:;" class="oper_btn">去付款</a></td>#}
-{#					</tr>#}
-{#				</tbody>#}
-{#			</table>#}
+                        <ul class="order_list_th w978 clearfix">
+                            <li class="col01">{{ ids.create_time }}</li>
+                            <li class="col02">订单号：{{ order_id }}</li>
+                        </ul>
 
+                        <table class="order_list_table w980">
+                            <tbody>
+                                <tr>
+                                    <td width="55%">
+
+                                        {% for info in infos %}
+                                            {% if order_id == info.order_id %}
+                                            <ul class="order_goods_list clearfix">
+                                                <li class="col01"><img src="{{ info.default_image }}"></li>
+                                                <li class="col02"><span>{{ info.name }}</span><em>{{ info.price }}元</em></li>
+                                                <li class="col03">{{ info.count }}</li>
+                                                <li class="col04">{{ info.singer_amount }}元</li>
+                                            </ul>
+
+                                            {% endif %}
+
+                                        {% endfor %}
+        {#                                <ul class="order_goods_list clearfix">#}
+        {#                                    <li class="col01"><img src="../static/images/goods/goods001.jpg"></li>#}
+        {#                                    <li class="col02"><span>360手机 N6 Pro 全网通</span><em>2688.00元</em></li>#}
+        {#                                    <li class="col03">1</li>#}
+        {#                                    <li class="col04">2688.00元</li>#}
+        {#							    </ul>#}
+                                    </td>
+                                    <td width="15%">{{ ids.total_amount }}元<br>含运费：{{ ids.freight }}元</td>
+                                    <td width="15%">{{ ids.method }}</td>
+                                    <td width="15%"><a href="javascript:;" class="oper_btn"  @click="oper_btn_click('{{ids.order_id}}', {{ ids.status_id }})">{{ ids.status }}</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
 		    <div class="pagenation">
 		        <div id="pagination" class="page"></div>
     		</div>
