@@ -66,13 +66,14 @@
 		<div class="right_content clearfix">
 
 			<h3 class="common_title2">全部订单</h3>
-            {% for order_id,infos in all_info.items() %}
-{#                {% for order in order_id %}#}
-                {% for ids in utils_info %}
-                    {% if ids.order_id == order_id %}
+            {% for sku in page_skus %}
+                {% for order_id,infos in all_info.items() %}
+
+{#                {% for ids in utils_info %}#}
+                    {% if sku.order_id == order_id %}
 
                         <ul class="order_list_th w978 clearfix">
-                            <li class="col01">{{ ids.create_time }}</li>
+                            <li class="col01">{{ sku.create_time }}</li>
                             <li class="col02">订单号：{{ order_id }}</li>
                         </ul>
 
@@ -100,15 +101,16 @@
         {#                                    <li class="col04">2688.00元</li>#}
         {#							    </ul>#}
                                     </td>
-                                    <td width="15%">{{ ids.total_amount }}元<br>含运费：{{ ids.freight }}元</td>
-                                    <td width="15%">{{ ids.method }}</td>
+                                    <td width="15%">{{ sku.total_amount }}元<br>含运费：{{ sku.freight }}元</td>
+                                    <td width="15%">{{ sku.method }}</td>
 {#                                    <td width="15%"><a href="javascript:;" class="oper_btn"  @click="oper_btn_click('{{ids.order_id}}', {{ ids.status_id }})">{{ ids.status }}</a></td>#}
-                                    <td width="15%"><a href="javascript:;" class="oper_btn"  @click="oper_btn_click('{{ids.order_id}}', {{ ids.status_id }})">{{ ids.status }}</a></td>
+                                    <td width="15%"><a href="javascript:;" class="oper_btn"  @click="oper_btn_click('{{sku.order_id}}', {{ sku.status_id }})">{{ sku.status }}</a></td>
                                 </tr>
                             </tbody>
                         </table>
                     {% endif %}
                 {% endfor %}
+{#                {% endfor %}#}
             {% endfor %}
 		    <div class="pagenation">
 		        <div id="pagination" class="page"></div>
@@ -133,7 +135,7 @@
 	</div>
 	<script type="text/javascript" src="{{ static('js/jquery.pagination.min.js') }}"></script>
 	<script type="text/javascript" src="{{ static('js/user_center_order.js') }}"></script>
-	<script>
+	<script type="text/javascript">
         $(function () {
             $('#pagination').pagination({
                 currentPage: {{ page_num }},

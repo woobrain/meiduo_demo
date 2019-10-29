@@ -518,15 +518,9 @@ class CenterOrder(LoginRequiredMixin, View):
 
         if user.is_authenticated:
             orders = OrderInfo.objects.all().order_by('-create_time')
-            paginator = Paginator(object_list=orders,per_page=2)
-            try:
-                page_skus = paginator.page(page_num)
-            except:
-                return HttpResponse('空页面')
-            pages = paginator.num_pages
-
             content = []
             context = {}
+            # page_skus = []
             utils_info = []
             for order in orders:
                 goods = OrderGoods.objects.filter(order=order)
@@ -544,7 +538,7 @@ class CenterOrder(LoginRequiredMixin, View):
                         "singer_amount": good.count * int(good.price),
 
                     })
-                print(content)
+                # print(content)
                 utils_info.append({
                     "freight": str(order.freight),
                     "order_id": str(order.order_id),
@@ -554,6 +548,19 @@ class CenterOrder(LoginRequiredMixin, View):
                     "status": OrderInfo.ORDER_STATUS_CHOICES[order.status - 1][1],
                     "status_id": order.status
                 })
+                # print(utils_info)
+                # page_skus.append({
+                #
+                #     "freight": str(order.freight),
+                #     "order_id": str(order.order_id),
+                #     "create_time": order.create_time.strftime("%Y-%m-%d %H:%M:%S"),
+                #     "method": OrderInfo.PAY_METHOD_CHOICES[order.pay_method - 1][1],
+                #     "total_amount": str(order.total_amount),
+                #     "status": OrderInfo.ORDER_STATUS_CHOICES[order.status - 1][1],
+                #     "status_id": order.status
+                #
+                # })
+                # print(page_skus)
                 context[order.order_id] = content
 
                 # context = {
@@ -572,7 +579,12 @@ class CenterOrder(LoginRequiredMixin, View):
                 #         "price":str(good.price),
                 #         "total_amount":str(order.total_amount)
                 #     }
-
+            paginator = Paginator(object_list=utils_info, per_page=2)
+            try:
+                page_skus = paginator.page(page_num)
+            except:
+                return HttpResponse('空页面')
+            pages = paginator.num_pages
             context_all = {
                 "page_num":page_num,
                 "page_total":pages,
@@ -580,7 +592,9 @@ class CenterOrder(LoginRequiredMixin, View):
                 "utils_info": utils_info,
                 "all_info": context
             }
-            print(context_all)
+            # for i in page_skus:
+            #     print(i.order_id)
+            # print(context_all)
             return render(request, 'user_center_order.html', context_all)
         else:
             return redirect(reverse('user:login'))
