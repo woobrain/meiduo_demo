@@ -165,6 +165,12 @@ class LogoutView(View):
         return response
 
 
+class FindPasswd(View):
+    def get(self,request):
+
+        return render(request,'find_password.html')
+
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -653,5 +659,6 @@ class GoodsJudge(LoginRequiredMixin, View):
             return JsonResponse({"code": 0, "errmsg": "ok"})
         else:
             return JsonResponse({"code": 4101, "errmsg": "请登录"})
+
 
 

@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^orders/info/(?P<page_num>\d+)/$', views.CenterOrder.as_view(), name='centerorder'),
     # url(r'^center/order/goodsjudge/$', views.GoodsJudge.as_view(), name='goodsjudge'),
     url(r'^orders/comment/', views.GoodsJudge.as_view(), name='comment'),
+    url(r'^find_password/$', views.FindPasswd.as_view(), name='findpasswd'),
 
 ]

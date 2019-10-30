@@ -288,3 +288,9 @@ ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
 ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
 APP_PRIVATE_KEY_PATH = os.path.join(BASE_DIR, 'apps/payment/keys/app_private_key.pem')
 ALIPAY_PUBLIC_KEY_PATH = os.path.join(BASE_DIR, 'apps/payment/keys/alipay_public_key.pem')
+
+
+#####################weibo###################
+APP_KEY = '1995790935'
+APP_SECRET = '94e03bad822e1ae7a1e4253071c465e8'
+REDIRECT_URL = 'http://www.meiduo.site:8000/weibo_callback'
