@@ -37,6 +37,7 @@ var vm = new Vue({
     mounted: function () {
         // 向服务器获取图片验证码
         this.generate_image_code();
+        // this.mobile = mobile;
     },
     methods: {
         generateUUID: function () {
@@ -91,23 +92,23 @@ var vm = new Vue({
         //
         // },
         // 检查密码
-        // check_password: function () {
-        //     var re = /^[0-9A-Za-z]{8,20}$/;
-        //     if (re.test(this.password)) {
-        //         this.error_password = false;
-        //     } else {
-        //         this.error_password = true;
-        //     }
-        // },
-        // // 确认密码
-        // check_password2: function () {
-        //     if (this.password != this.password2) {
-        //
-        //         this.error_check_password = true;
-        //     } else {
-        //         this.error_check_password = false;
-        //     }
-        // },
+        check_password: function () {
+            var re = /^[0-9A-Za-z]{8,20}$/;
+            if (re.test(this.password)) {
+                this.error_password = false;
+            } else {
+                this.error_password = true;
+            }
+        },
+        // 确认密码
+        check_password2: function () {
+            if (this.password != this.password2) {
+
+                this.error_check_password = true;
+            } else {
+                this.error_check_password = false;
+            }
+        },
         // // 检查手机号
         // check_mobile: function () {
         //     var re = /^1[345789]\d{9}$/;
@@ -148,15 +149,15 @@ var vm = new Vue({
         //         });
         // },
         // 检查图片验证码
-        check_image_code: function () {
-            if (!this.image_code) {
-                this.error_image_code_message = '请填写图片验证码';
-                this.error_image_code = true;
-            } else {
-                this.error_image_code = false;
-            }
-
-        },
+        // check_image_code: function () {
+        //     if (!this.image_code) {
+        //         this.error_image_code_message = '请填写图片验证码';
+        //         this.error_image_code = true;
+        //     } else {
+        //         this.error_image_code = false;
+        //     }
+        //
+        // },
         // 检查短信验证码
         // check_sms_code: function () {
         //     if (!this.sms_code) {
@@ -182,7 +183,7 @@ var vm = new Vue({
         //         this.error_allow = false;
         //     }
         // },
-        // // 发送手机短信验证码
+        // 发送手机短信验证码
         // send_sms_code: function () {
         //     if (this.sending_flag == true) {
         //         return;
@@ -190,16 +191,16 @@ var vm = new Vue({
         //     this.sending_flag = true;
         //
         //     // 校验参数，保证输入框有数据填写
-        //     this.check_mobile();
-        //     this.check_image_code();
+        //     // this.check_mobile();
+        //     // this.check_image_code();
         //
-        //     if (this.error_mobile == true || this.error_image_code == true) {
+        //     if (this.error_mobile == true) {
         //         this.sending_flag = false;
         //         return;
         //     }
-        //
-        //     // 向后端接口发送请求，让后端发送短信验证码
-        //     var url = this.host + '/sms_codes/' + this.mobile + '/?image_code=' + this.image_code + '&uuid=' + this.image_code_id;
+
+            // 向后端接口发送请求，让后端发送短信验证码
+        //     var url = this.host + '/find_password/' + this.mobile +'/';
         //     axios.get(url, {
         //         responseType: 'json'
         //     })
@@ -243,39 +244,40 @@ var vm = new Vue({
         // 表单提交
         on_submit(){
             // this.check_username();
-            this.check_image_code();
+            // this.check_image_code();
             // this.check_password();
             // this.check_password2();
             // this.check_mobile();
             // this.check_sms_code();
             // this.check_allow();
-            if (this.error_name == true ) {
-                // 不满足注册条件：禁用表单
-                window.event.returnValue = false;
-            }
+            // if (this.error_mobile == true ) {
+            //     // 不满足注册条件：禁用表单
+            //     window.event.returnValue = false;
+            // }
             // || this.error_password == true || this.error_check_password == true
                 // || this.error_mobile == true || this.error_sms_code == true || this.error_allow == true
-            // var url = this.host + '/find_password/';
-            // axios.post(url,{
-            //     username:this.username,
-            //     image_code:this.image_code,
-            //     uuid:this.image_code_id,
-            // },{
-            //     headers: {
-            //         'X-CSRFToken': getCookie('csrftoken')
-            //     },
-            //     responseType: 'json',
-            //     withCredentials: true
-            // }).then(response=>{
-            //         if(response.data.count == 1) {
-            //             this.error_name_message = '此用户没有注册'
-            //             this.error_name = true
-            //         }else {
-            //             this.error_name = false
-            //         }
-            //     }).catch(error=>{
-            //         this.error_sms_code = false;
-            //     });
+            var url = this.host + '/find_mobile/' + this.mobile + '/';
+            axios.post(url,{
+                mobile:this.mobile,
+                sms_code:this.sms_code,
+                // image_code:this.image_code,
+                // uuid:this.image_code_id,
+            },{
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                responseType: 'json',
+                withCredentials: true
+            }).then(response=>{
+                    if(response.data.count == 0) {
+                        this.error_name_message = '验证码不正确'
+                        this.error_name = true
+                    }else {
+                        this.error_name = false
+                    }
+                }).catch(error=>{
+                    this.error_sms_code = false;
+                });
 
         }
     }

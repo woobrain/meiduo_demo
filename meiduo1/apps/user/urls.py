@@ -23,5 +23,10 @@ urlpatterns = [
     # url(r'^center/order/goodsjudge/$', views.GoodsJudge.as_view(), name='goodsjudge'),
     url(r'^orders/comment/', views.GoodsJudge.as_view(), name='comment'),
     url(r'^find_password/$', views.FindPasswd.as_view(), name='findpasswd'),
+    url(r'^find_mobile/$', views.FindMobilex.as_view(), name='findmobile2'),
+    url(r'^find_mobile/(?P<mobile>[1][345789]\d{9})/$', views.FindMobile.as_view(), name='findmobile'),
+    url(r'^modify_password/$', views.ModifyPwd.as_view(), name='modify_password'),
+    url(r'^modify_ok/$', views.ModifyOk.as_view(), name='modify_ok'),
+    # url(r'^find_password/(?P<username>[a-zA-Z0-9_-]{5,20})/$', views.FindName.as_view(), name='findname'),
 
 ]

@@ -1,7 +1,11 @@
 import json
 import re
 from datetime import datetime
+from random import *
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 from django.core.paginator import Paginator
 from django.http import HttpResponse
@@ -167,11 +171,131 @@ class LogoutView(View):
 
 class FindPasswd(View):
     def get(self,request):
-
         return render(request,'find_password.html')
+    def post(self,request):
+        username = request.POST.get('username')
+        pic_code = request.POST.get('pic_code')
+        uuid = request.POST.get('uuid')
+        if not all([username,pic_code]):
+            return HttpResponseBadRequest('参数不全')
+        redis_con = get_redis_connection('code')
+        try:
+            img_code = redis_con.get('img_%s'%uuid).decode().lower()
+        except:
+            return HttpResponseBadRequest('请输入图片验证码')
+        if img_code != pic_code.lower():
+            return HttpResponseBadRequest('图片验证码不正确')
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest('用户名不存在')
+        mobile = user.mobile
+
+        # context = {
+        #     "mobile":mobile
+        # }
+        response = redirect(reverse('user:findmobile2'))
+        response.set_cookie('mobile',mobile,max_age=7*24*3600)
+        response.set_cookie('user_id',user.id,max_age=7*24*3600)
+        return response
+        # return render(request,'input_mobile_verify.html',context)
 
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+class FindMobilex(View):
+    def get(self,request):
+        mobile = request.COOKIES.get('mobile')
+        user_id = request.COOKIES.get('user_id')
+        mobile2 = mobile[0:3]+"****"+mobile[7:11]
+        try:
+            user = User.objects.get(mobile=mobile,id=user_id)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest('不当请求')
+        response = render(request,'input_mobile_verify.html',{"mobile":mobile,"mobile2":mobile2})
+        response.set_cookie('user_id', user.id, max_age=7 * 24 * 3600)
+        response.set_cookie('mobile', mobile, max_age=7 * 24 * 3600)
+        return response
+
+    def post(self,request):
+        mobile = request.POST.get('mobile')
+        sms_code = request.POST.get('sms_code')
+        if not all([mobile,sms_code]):
+            return HttpResponseBadRequest('参数不全')
+        redis_con = get_redis_connection('code')
+        try:
+            mobile_code = redis_con.get('sms_%s'%mobile).decode()
+        except:
+            return HttpResponseBadRequest('验证码失效')
+        if sms_code != mobile_code:
+            return HttpResponseBadRequest('验证码不正确')
+        try:
+            user = User.objects.get(mobile=mobile)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest('用户名不存在')
+        response = redirect(reverse('user:modify_password'))
+        response.set_cookie('user_id',user.id,max_age=7*24*3600)
+        response.set_cookie('mobile',mobile,max_age=7*24*3600)
+        # response.set_cookie('user_n',user.username,max_age=7*24*3600)
+        return response
+
+
+class FindMobile(View):
+    def get(self,request,mobile):
+        redis_con = get_redis_connection('code')
+        mobile_flag = redis_con.get('send_flag_%s' % mobile)
+        if mobile_flag:
+            return JsonResponse({"code": "1", "errmsg": "操作太过频繁"})
+
+        # if code is None:
+        #     return JsonResponse({"code":"4001","errmsg": "验证码失效"})
+
+        sms_code = '%06d' % randint(0, 999999)
+        redis_con.setex('sms_%s' % mobile, 200, sms_code)
+        redis_con.setex('send_flag_%s' % mobile, 200, 1)
+
+        # CCP().send_template_sms(mobile, [sms_code, 2], 1)
+        from celery_tasks.sms.tasks import sms_send
+        sms_send.delay(mobile, sms_code)
+
+        return JsonResponse({"code": 0, "errmsg": "发送信息成功"})
+
+    # def post(self,request,mobile):
+    #     # data = json.loads(request.body.decode())
+    #     mobile = request.POST.get('mobile')
+    #     return render(request,'modify_password.html')
+
+class ModifyPwd(View):
+    def get(self,request):
+        return render(request,'modify_password.html')
+
+    def post(self,request):
+        mobile_c = request.COOKIES.get('mobile')
+        user_id_c = request.COOKIES.get('user_id')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        if not all([mobile_c,user_id_c,password,password2]):
+            return HttpResponseBadRequest('参数不全或者登陆态已经失效')
+        if not re.match(r'^[0-9A-Za-z]{8,20}$',password):
+            return HttpResponseBadRequest('请输入8-20位的密码!!')
+        if password != password2:
+            return HttpResponseBadRequest('两次密码不一致')
+        from django.contrib.auth import login, authenticate,get_user
+        user = User.objects.get(mobile=mobile_c,id=user_id_c)
+        user.password = make_password(password)
+        user.save()
+
+        login(request,user)
+
+        response = redirect(reverse('user:modify_ok'))
+        response.delete_cookie('mobile')
+        response.delete_cookie('user_id')
+        response.set_cookie('username',user.username,max_age=7*24*3600)
+        return response
+
+
+class ModifyOk(LoginRequiredMixin,View):
+    def get(self,request):
+        username = request.COOKIES.get('username')
+        return render(request,'modify_ok.html',{"username":username})
 
 
 class CenterView(LoginRequiredMixin, View):
