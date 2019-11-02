@@ -120,16 +120,16 @@ DATABASES = {
         'PASSWORD': 'wu980120',
         'NAME': 'meiduo_info',
     },
-    'slave': { # 读（从机）
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'PORT': 8306,
-        'USER': 'root',
-        'PASSWORD': 'wu980120',
-        'NAME': 'meiduo_info'
-    }
+    # 'slave': { # 读（从机）
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': 8306,
+    #     'USER': 'root',
+    #     'PASSWORD': 'wu980120',
+    #     'NAME': 'meiduo_info'
+    # }
 }
-DATABASE_ROUTERS = ['utils.db_router.MasterSlaveDBRouter']
+# DATABASE_ROUTERS = ['utils.db_router.MasterSlaveDBRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
